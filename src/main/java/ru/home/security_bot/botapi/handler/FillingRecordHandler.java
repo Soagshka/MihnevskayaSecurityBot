@@ -70,7 +70,8 @@ public class FillingRecordHandler implements InputMessageHandler {
             case RECORD_DATA_FILLED:
                 recordData.setCarNumber(userAnswer);
                 userDataCache.setUsersCurrentBotState(userId, BotState.FILL_RECORD);
-                sendMessage = new SendMessage(chatId, String.format("%s %s", "Данные по записи", recordData));
+                sendMessage = new SendMessage(chatId, "Номер квартиры = " + recordData.getFlatNumber() + ", номер телефона = " +
+                        recordData.getPhoneNumber() + ", марка автомобиля = " + recordData.getCarMark() + ", номер автомобиля = " + recordData.getCarNumber());
                 break;
         }
         userDataCache.saveRecordData(userId, recordData);
