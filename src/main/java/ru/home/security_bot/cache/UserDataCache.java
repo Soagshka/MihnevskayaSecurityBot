@@ -1,7 +1,9 @@
 package ru.home.security_bot.cache;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import ru.home.security_bot.botapi.BotState;
+import ru.home.security_bot.botapi.TelegramFacade;
 import ru.home.security_bot.model.RecordData;
 
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 
 @Component
 public class UserDataCache implements DataCache {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramFacade.class);
     Map<Integer, BotState> usersBotState = new HashMap<>();
     Map<Integer, RecordData> recordDataMap = new HashMap<>();
 
@@ -21,6 +24,7 @@ public class UserDataCache implements DataCache {
     public BotState getUsersCurrentBotState(int userId) {
         BotState botState = usersBotState.get(userId);
         if (botState == null) {
+            log.warn("We are null!!!!");
             botState = BotState.FILL_RECORD;
         }
 
