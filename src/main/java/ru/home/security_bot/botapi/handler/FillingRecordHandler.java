@@ -53,7 +53,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     recordData.setFlatNumber(Integer.parseInt(userAnswer));
                     userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
                 } catch (Exception e) {
-                    sendMessage = replyMessageService.getReplyMessage(chatId, "Неверный номер квартиры! Введите номер квартиры заново : ");
+                    sendMessage = new SendMessage(chatId, "Неверный номер квартиры! Введите заново : ");
                     userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
                 }
                 break;
