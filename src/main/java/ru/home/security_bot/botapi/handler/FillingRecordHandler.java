@@ -46,22 +46,27 @@ public class FillingRecordHandler implements InputMessageHandler {
             case ASK_FLAT:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askFlat");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
+                break;
             case ASK_PHONE_NUMBER:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
                 recordData.setFlatNumber(Integer.parseInt(userAnswer));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
+                break;
             case ASK_CAR_MARK:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarMark");
                 recordData.setPhoneNumber(userAnswer);
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
+                break;
             case ASK_CAR_NUMBER:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarNUmber");
                 recordData.setCarMark(userAnswer);
                 userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
+                break;
             case RECORD_DATA_FILLED:
                 recordData.setCarNumber(userAnswer);
                 userDataCache.setUsersCurrentBotState(userId, BotState.FILL_RECORD);
                 sendMessage = new SendMessage(chatId, String.format("%s %s", "Данные по записи", recordData));
+                break;
         }
         userDataCache.saveRecordData(userId, recordData);
 
