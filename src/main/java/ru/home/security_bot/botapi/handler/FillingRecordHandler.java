@@ -48,9 +48,14 @@ public class FillingRecordHandler implements InputMessageHandler {
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
                 break;
             case ASK_PHONE_NUMBER:
-                sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
-                recordData.setFlatNumber(Integer.parseInt(userAnswer));
-                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
+                try {
+                    sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
+                    recordData.setFlatNumber(Integer.parseInt(userAnswer));
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
+                } catch (Exception e) {
+                    sendMessage = replyMessageService.getReplyMessage(chatId, "Неверный номер квартиры! Введите номер квартиры заново : ");
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
+                }
                 break;
             case ASK_CAR_MARK:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarMark");
