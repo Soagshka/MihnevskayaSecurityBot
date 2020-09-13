@@ -23,6 +23,7 @@ public class BotStateContext {
 
     private InputMessageHandler findMessageHandler(BotState botState) {
         if (isFillingProfileState(botState)) {
+            System.out.println("MESSAGE HANDLERS : " + messageHandlers.toString());
             return messageHandlers.get(BotState.FILL_RECORD);
         }
         return messageHandlers.get(botState);
