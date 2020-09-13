@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import ru.home.security_bot.botapi.SecurityTelegramBot;
+import ru.home.security_bot.botapi.TelegramFacade;
 
 @Setter
 @Getter
@@ -19,9 +20,9 @@ public class BotConfig {
     private String botToken;
 
     @Bean
-    public SecurityTelegramBot securityTelegramBot() {
+    public SecurityTelegramBot securityTelegramBot(TelegramFacade telegramFacade) {
 
-        SecurityTelegramBot securityTelegramBot = new SecurityTelegramBot();
+        SecurityTelegramBot securityTelegramBot = new SecurityTelegramBot(telegramFacade);
         securityTelegramBot.setBotUserName(botUserName);
         securityTelegramBot.setBotToken(botToken);
         securityTelegramBot.setWebHookPath(webHookPath);

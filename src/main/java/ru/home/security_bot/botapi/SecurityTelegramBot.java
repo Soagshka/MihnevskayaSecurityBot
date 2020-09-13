@@ -4,24 +4,23 @@ import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class SecurityTelegramBot extends TelegramWebhookBot {
     private String botToken;
     private String botUserName;
     private String webHookPath;
 
+    private TelegramFacade telegramFacade;
+
+    public SecurityTelegramBot(TelegramFacade telegramFacade) {
+        this.telegramFacade = telegramFacade;
+    }
+
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
-        if (update.getMessage() != null && update.getMessage().hasText()) {
-            long chatId = update.getMessage().getChatId();
-            try {
-                execute(new SendMessage(chatId, "Hi " + update.getMessage().getText()));
-            } catch (TelegramApiException exception) {
+        SendMessage replyMessageToUser = telegramFacade.handleUpdate(update);
 
-            }
-        }
-        return null;
+        return replyMessageToUser;
     }
 
     @Override
