@@ -36,6 +36,7 @@ public class BotStateContext {
             case ASK_CAR_MARK:
             case ASK_CAR_NUMBER:
             case ASK_PHONE_NUMBER:
+            case RECORD_DATA_FILLED:
                 return true;
             default:
                 return false;
