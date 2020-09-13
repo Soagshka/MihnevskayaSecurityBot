@@ -11,6 +11,11 @@ public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
 
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache) {
+        this.botStateContext = botStateContext;
+        this.userDataCache = userDataCache;
+    }
+
     public SendMessage handleUpdate(Update update) {
         SendMessage replyMessage = null;
 
