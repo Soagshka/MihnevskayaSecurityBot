@@ -2,7 +2,6 @@ package ru.home.security_bot.botapi;
 
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class SecurityTelegramBot extends TelegramWebhookBot {
@@ -17,10 +16,8 @@ public class SecurityTelegramBot extends TelegramWebhookBot {
     }
 
     @Override
-    public BotApiMethod onWebhookUpdateReceived(Update update) {
-        SendMessage replyMessageToUser = telegramFacade.handleUpdate(update);
-
-        return replyMessageToUser;
+    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+        return telegramFacade.handleUpdate(update);
     }
 
     @Override
