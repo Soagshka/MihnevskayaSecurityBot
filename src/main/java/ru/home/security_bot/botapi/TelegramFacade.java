@@ -71,7 +71,7 @@ public class TelegramFacade {
         final int userId = buttonQuery.getFrom().getId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
 
-        if (buttonQuery.getData().equals("buttonMan")) {
+        if (buttonQuery.getData().equals("UnknownMark")) {
             RecordData recordData = userDataCache.getRecordData(userId);
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
