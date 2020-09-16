@@ -1,28 +1,41 @@
 package ru.home.security_bot.botapi;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_bot.cache.UserDataCache;
+import ru.home.security_bot.service.MainMenuService;
 
 @Component
 public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
+    private MainMenuService mainMenuService;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
+        this.mainMenuService = mainMenuService;
     }
 
-    public SendMessage handleUpdate(Update update) {
+    public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
+
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            return processCallbackQuery(callbackQuery);
+        }
+
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             replyMessage = handleInputMessage(message);
         }
+
         return replyMessage;
     }
 
@@ -34,6 +47,9 @@ public class TelegramFacade {
 
         switch (inputMsg) {
             case "/start":
+                botState = BotState.SHOW_MAIN_MENU;
+                break;
+            case "Заполнить данные для пропуска":
                 botState = BotState.FILL_RECORD;
                 break;
             case "Помощь":
@@ -48,5 +64,22 @@ public class TelegramFacade {
 
         replyMessage = botStateContext.processInputMessage(botState, message);
         return replyMessage;
+    }
+
+    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
+        final long chatId = buttonQuery.getMessage().getChatId();
+        final int userId = buttonQuery.getFrom().getId();
+        BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
+        userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        return callBackAnswer;
+
+    }
+
+    private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackquery) {
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(callbackquery.getId());
+        answerCallbackQuery.setShowAlert(alert);
+        answerCallbackQuery.setText(text);
+        return answerCallbackQuery;
     }
 }
