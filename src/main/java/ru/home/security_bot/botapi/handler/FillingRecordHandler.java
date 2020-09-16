@@ -90,9 +90,9 @@ public class FillingRecordHandler implements InputMessageHandler {
                 Matcher matcher = pattern.matcher(userAnswer);
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
-                    userDataCache.setUsersCurrentBotState(userId, BotState.FILL_RECORD);
-                    sendMessage = new SendMessage(chatId, "Номер квартиры = " + recordData.getFlatNumber() + ", номер телефона = " +
-                            recordData.getPhoneNumber() + ", марка автомобиля = " + recordData.getCarMark() + ", номер автомобиля = " + recordData.getCarNumber());
+                    userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+                    sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
+                            "Данные по вашей анкете", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
                 } else {
                     sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново : ");
                     userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
