@@ -1,7 +1,7 @@
 package ru.home.security_bot.botapi;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -13,6 +13,7 @@ import ru.home.security_bot.service.MainMenuService;
 
 @Component
 public class TelegramFacade {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramFacade.class);
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
@@ -76,19 +77,11 @@ public class TelegramFacade {
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
-            callBackAnswer = new SendMessage(chatId, "Номер автомобиля :");
+            return new SendMessage(chatId, "Номер автомобиля :");
         }
 
         userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         return callBackAnswer;
 
-    }
-
-    private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackquery) {
-        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
-        answerCallbackQuery.setCallbackQueryId(callbackquery.getId());
-        answerCallbackQuery.setShowAlert(alert);
-        answerCallbackQuery.setText(text);
-        return answerCallbackQuery;
     }
 }
