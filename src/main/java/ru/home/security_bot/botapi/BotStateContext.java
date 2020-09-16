@@ -13,7 +13,10 @@ public class BotStateContext {
     private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
 
     public BotStateContext(List<InputMessageHandler> messageHandlers) {
-        messageHandlers.forEach(inputMessageHandler -> this.messageHandlers.put(inputMessageHandler.getHandlerName(), inputMessageHandler));
+        messageHandlers.forEach(inputMessageHandler -> {
+            System.out.println("inputMessageHandler.getHandlerName() = " + inputMessageHandler.getHandlerName());
+            this.messageHandlers.put(inputMessageHandler.getHandlerName(), inputMessageHandler);
+        });
     }
 
     public SendMessage processInputMessage(BotState botState, Message message) {
