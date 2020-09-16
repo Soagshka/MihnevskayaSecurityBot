@@ -82,21 +82,22 @@ public class FillingRecordHandler implements InputMessageHandler {
                 break;
             case ASK_CAR_NUMBER:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarNUmber");
+                recordData.setCarMark(userAnswer);
+                userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
+                break;
+            case RECORD_DATA_FILLED:
                 Pattern pattern = Pattern.compile("^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$");
                 Matcher matcher = pattern.matcher(userAnswer);
                 if (matcher.matches()) {
-                    recordData.setCarMark(userAnswer);
-                    userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
+                    recordData.setCarNumber(userAnswer);
+                    userDataCache.setUsersCurrentBotState(userId, BotState.FILL_RECORD);
+                    sendMessage = new SendMessage(chatId, "Номер квартиры = " + recordData.getFlatNumber() + ", номер телефона = " +
+                            recordData.getPhoneNumber() + ", марка автомобиля = " + recordData.getCarMark() + ", номер автомобиля = " + recordData.getCarNumber());
                 } else {
                     sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново : ");
-                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
+                    userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 }
-                break;
-            case RECORD_DATA_FILLED:
-                recordData.setCarNumber(userAnswer);
-                userDataCache.setUsersCurrentBotState(userId, BotState.FILL_RECORD);
-                sendMessage = new SendMessage(chatId, "Номер квартиры = " + recordData.getFlatNumber() + ", номер телефона = " +
-                        recordData.getPhoneNumber() + ", марка автомобиля = " + recordData.getCarMark() + ", номер автомобиля = " + recordData.getCarNumber());
+
                 break;
         }
         userDataCache.saveRecordData(userId, recordData);
