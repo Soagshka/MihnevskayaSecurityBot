@@ -6,12 +6,16 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.home.security_bot.botapi.BotState;
 import ru.home.security_bot.botapi.InputMessageHandler;
 import ru.home.security_bot.cache.UserDataCache;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.ReplyMessageService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,6 +79,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     Phonenumber.PhoneNumber phoneNumberProto = phoneUtil.parse(userAnswer, "RU");
                     if (phoneUtil.isValidNumber(phoneNumberProto)) {
                         sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarMark");
+                        sendMessage.setReplyMarkup(getUnknownMark());
                         recordData.setPhoneNumber(userAnswer);
                         userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
                     } else {
@@ -98,7 +103,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     recordData.setCarNumber(userAnswer);
                     userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
                     sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
-                            "Данные по вашей анкете", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
+                            "Данные по вашей заявке", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
                 } else {
                     sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново : ");
                     userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
@@ -109,5 +114,23 @@ public class FillingRecordHandler implements InputMessageHandler {
         userDataCache.saveRecordData(userId, recordData);
 
         return sendMessage;
+    }
+
+    private InlineKeyboardMarkup getUnknownMark() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton buttonGenderMan = new InlineKeyboardButton().setText("Не знаю марку");
+
+        //Every button must have callBackData, or else not work !
+        buttonGenderMan.setCallbackData("UnknownMark");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonGenderMan);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
     }
 }

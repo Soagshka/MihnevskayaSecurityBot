@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_bot.cache.UserDataCache;
+import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.MainMenuService;
 
 @Component
@@ -29,7 +30,6 @@ public class TelegramFacade {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             return processCallbackQuery(callbackQuery);
         }
-
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
@@ -70,6 +70,15 @@ public class TelegramFacade {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
+
+        if (buttonQuery.getData().equals("buttonMan")) {
+            RecordData recordData = userDataCache.getRecordData(userId);
+            recordData.setCarMark("Неизвестная марка");
+            userDataCache.saveRecordData(userId, recordData);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
+            callBackAnswer = new SendMessage(chatId, "reply.askCarMark");
+        }
+
         userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         return callBackAnswer;
 
