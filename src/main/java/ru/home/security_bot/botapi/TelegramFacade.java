@@ -76,7 +76,7 @@ public class TelegramFacade {
             RecordData recordData = userDataCache.getRecordData(userId);
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
+            userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
             return new SendMessage(chatId, "Номер автомобиля :");
         }
 
