@@ -3,6 +3,7 @@ package ru.home.security_bot.botapi.handler;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class FillingRecordHandler implements InputMessageHandler {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(FillingRecordHandler.class);
     private final UserDataCache userDataCache;
     private final ReplyMessageService replyMessageService;
     private final RecordDataRepository recordDataRepository;
@@ -47,6 +49,7 @@ public class FillingRecordHandler implements InputMessageHandler {
         BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(message.getFrom().getId(), message.getChatId());
         if (botStateEntity != null) {
             if (!botStateEntity.getBotState().equals("FILL_RECORD")) {
+                log.warn("INSIDE HANDLE NOT EQUALS");
                 botState = BotState.valueOf(botStateEntity.getBotState());
             }
         }
