@@ -67,25 +67,24 @@ public class FillingRecordHandler implements InputMessageHandler {
         long chatId = message.getChatId();
 
         RecordData recordData = userDataCache.getRecordData(userId);
-        log.warn("recordData.getFlatNumber() === " + recordData.getFlatNumber());
-        if (recordData.getFlatNumber() == 0) {
-            botState = BotState.ASK_FLAT;
-        }
 
         SendMessage sendMessage = null;
+        if (BotStateUtil.isRestartNeeded(recordData, botState)) {
+            botState = BotState.ASK_FLAT;
+            BotStateUtil.saveBotState(userId, chatId, botState);
+            return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново...");
+        }
 
         switch (botState) {
             case ASK_FLAT:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askFlat");
                 botState = BotState.ASK_PHONE_NUMBER;
-                log.warn("CHANGED STATE");
 //                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
                 break;
             case ASK_PHONE_NUMBER:
                 try {
                     sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
                     int flatNumber = Integer.parseInt(userAnswer);
-                    log.warn("INSIDE ASK+PHONE_NUMBER = " + flatNumber);
                     if (flatNumber > 0 && flatNumber < 2570) {
                         recordData.setFlatNumber(flatNumber);
                         botState = BotState.ASK_CAR_MARK;
@@ -140,7 +139,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                 break;
         }
         BotStateUtil.saveBotState(userId, chatId, botState);
-        log.warn("recordData.getFlatNumber()  outside switch case === " + recordData.getFlatNumber());
         userDataCache.saveRecordData(userId, recordData);
 
         return sendMessage;
