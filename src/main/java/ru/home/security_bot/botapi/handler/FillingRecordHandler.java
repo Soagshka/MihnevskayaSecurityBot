@@ -27,11 +27,11 @@ import java.util.regex.Pattern;
 
 @Component
 public class FillingRecordHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
-    private ReplyMessageService replyMessageService;
-    private RecordDataRepository recordDataRepository;
-    private BotStateRepository botStateRepository;
-    private static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+    private final UserDataCache userDataCache;
+    private final ReplyMessageService replyMessageService;
+    private final RecordDataRepository recordDataRepository;
+    private final BotStateRepository botStateRepository;
+    private static final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
     public FillingRecordHandler(UserDataCache userDataCache, ReplyMessageService replyMessageService, RecordDataRepository recordDataRepository, BotStateRepository botStateRepository) {
         this.userDataCache = userDataCache;
@@ -156,7 +156,11 @@ public class FillingRecordHandler implements InputMessageHandler {
 
     private void saveBotState(int userId, Long chatId, BotState botState) {
         BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(userId, chatId);
-        botStateEntity.setBotState(botState.getDescription());
-        botStateRepository.save(botStateEntity);
+        if (botStateEntity != null) {
+            botStateEntity.setBotState(botState.getDescription());
+            botStateRepository.save(botStateEntity);
+        } else {
+            botStateRepository.save(new BotStateEntity(userId, chatId, botState.getDescription()));
+        }
     }
 }

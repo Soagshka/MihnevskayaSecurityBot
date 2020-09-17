@@ -1,8 +1,6 @@
 package ru.home.security_bot.dao;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,12 +9,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class BotStateEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue
     private Long id;
+    @NonNull
     private int userId;
+    @NonNull
     private Long chatId;
+    @NonNull
     private String botState;
 }
