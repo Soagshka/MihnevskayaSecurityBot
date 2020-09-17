@@ -6,5 +6,5 @@ import ru.home.security_bot.dao.BotStateEntity;
 
 @Repository
 public interface BotStateRepository extends JpaRepository<BotStateEntity, Long> {
-    BotStateEntity findByUserId(int userId);
+    BotStateEntity findByUserIdAndChatId(int userId, Long chatId);
 }

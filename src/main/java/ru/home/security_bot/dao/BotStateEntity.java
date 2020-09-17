@@ -16,6 +16,7 @@ public class BotStateEntity {
     @Column(name = "id")
     @GeneratedValue
     private Long id;
-    private Long userId;
+    private int userId;
+    private Long chatId;
     private String botState;
 }

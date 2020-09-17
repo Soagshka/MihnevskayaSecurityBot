@@ -11,10 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.home.security_bot.botapi.BotState;
 import ru.home.security_bot.botapi.InputMessageHandler;
 import ru.home.security_bot.cache.UserDataCache;
+import ru.home.security_bot.dao.BotStateEntity;
 import ru.home.security_bot.dao.RecordDataEntity;
 import ru.home.security_bot.dao.repository.BotStateRepository;
 import ru.home.security_bot.dao.repository.RecordDataRepository;
-import ru.home.security_bot.mapper.BotStateMapper;
 import ru.home.security_bot.mapper.RecordDataMapper;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.ReplyMessageService;
@@ -42,10 +42,14 @@ public class FillingRecordHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        BotState botState = BotStateMapper.BOT_STATE_MAPPER.botStateEntityToBotState(botStateRepository.findByUserId(message.getFrom().getId()));
-        if (botState == null || botState.equals(BotState.FILL_RECORD)) {
-            botState = BotState.ASK_FLAT;
+        BotState botState = BotState.ASK_FLAT;
+        BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(message.getFrom().getId(), message.getChatId());
+        if (botStateEntity != null) {
+            if (!botStateEntity.getBotState().equals("FILL_RECORD")) {
+                botState = BotState.valueOf(botStateEntity.getBotState());
+            }
         }
+
         return processUsersInput(message, botState);
     }
 
@@ -67,7 +71,6 @@ public class FillingRecordHandler implements InputMessageHandler {
             case ASK_FLAT:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askFlat");
                 botState = BotState.ASK_PHONE_NUMBER;
-                botStateRepository.save(BotStateMapper.BOT_STATE_MAPPER.botStateToBotStateEntity(botState));
 //                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
                 break;
             case ASK_PHONE_NUMBER:
@@ -77,7 +80,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                     if (flatNumber > 0 && flatNumber < 2570) {
                         recordData.setFlatNumber(flatNumber);
                         botState = BotState.ASK_CAR_MARK;
-                        botStateRepository.save(BotStateMapper.BOT_STATE_MAPPER.botStateToBotStateEntity(botState));
 //                        userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
                     } else {
                         sendMessage = new SendMessage(chatId, "Неверный номер квартиры! Введите заново : ");
@@ -94,7 +96,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                         sendMessage.setReplyMarkup(getUnknownMark());
                         recordData.setPhoneNumber(userAnswer);
                         botState = BotState.ASK_CAR_NUMBER;
-                        botStateRepository.save(BotStateMapper.BOT_STATE_MAPPER.botStateToBotStateEntity(botState));
                         //userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
                     } else {
                         sendMessage = new SendMessage(chatId, "Неверный номер телефона! Введите телефон заново : ");
@@ -107,7 +108,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarNUmber");
                 recordData.setCarMark(userAnswer);
                 botState = BotState.RECORD_DATA_FILLED;
-                botStateRepository.save(BotStateMapper.BOT_STATE_MAPPER.botStateToBotStateEntity(botState));
                 //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 break;
             case RECORD_DATA_FILLED:
@@ -116,7 +116,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
                     botState = BotState.SHOW_MAIN_MENU;
-                    botStateRepository.save(BotStateMapper.BOT_STATE_MAPPER.botStateToBotStateEntity(botState));
                     //userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
                     sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
                             "Данные по вашей заявке", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
@@ -126,6 +125,7 @@ public class FillingRecordHandler implements InputMessageHandler {
 
                 break;
         }
+        saveBotState(userId, chatId, botState);
         RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
         recordDataEntity.setRecordDate(new Date(System.currentTimeMillis()));
         recordDataEntity.setUserId(userId);
@@ -152,5 +152,11 @@ public class FillingRecordHandler implements InputMessageHandler {
         inlineKeyboardMarkup.setKeyboard(rowList);
 
         return inlineKeyboardMarkup;
+    }
+
+    private void saveBotState(int userId, Long chatId, BotState botState) {
+        BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(userId, chatId);
+        botStateEntity.setBotState(botState.getDescription());
+        botStateRepository.save(botStateEntity);
     }
 }
