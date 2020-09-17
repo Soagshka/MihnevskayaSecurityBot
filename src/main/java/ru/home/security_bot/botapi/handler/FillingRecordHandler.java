@@ -49,7 +49,7 @@ public class FillingRecordHandler implements InputMessageHandler {
         BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(message.getFrom().getId(), message.getChatId());
         if (botStateEntity != null) {
             if (!botStateEntity.getBotState().equals("FILL_RECORD")) {
-                log.warn("INSIDE HANDLE NOT EQUALS");
+                log.warn("INSIDE BOTSTATEENTITY NOT NULL NOT EQUAL");
                 botState = BotState.valueOf(botStateEntity.getBotState());
             }
         }

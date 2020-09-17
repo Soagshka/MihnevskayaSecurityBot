@@ -1,5 +1,6 @@
 package ru.home.security_bot.botapi;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +15,7 @@ import ru.home.security_bot.util.BotStateUtil;
 
 @Component
 public class TelegramFacade {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramFacade.class);
     private final BotStateContext botStateContext;
     private final UserDataCache userDataCache;
     private final MainMenuService mainMenuService;
@@ -57,10 +59,11 @@ public class TelegramFacade {
                 botState = BotState.SHOW_HELP;
                 break;
             default:
-                botState = userDataCache.getUsersCurrentBotState(userId);
+                botState = BotStateUtil.getBotState(message.getFrom().getId(), message.getChatId());
                 break;
         }
 
+        log.warn("SAVING BOT STATE = " + botState.getDescription());
         BotStateUtil.saveBotState(userId, message.getChatId(), botState);
         //userDataCache.setUsersCurrentBotState(userId, botState);
 

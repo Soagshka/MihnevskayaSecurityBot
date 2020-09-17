@@ -22,4 +22,12 @@ public class BotStateUtil {
             botStateRepository.save(new BotStateEntity(userId, chatId, botState.getDescription()));
         }
     }
+
+    public static BotState getBotState(int userId, Long chatId) {
+        BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(userId, chatId);
+        if (botStateEntity == null) {
+            return BotState.FILL_RECORD;
+        }
+        return BotState.valueOf(botStateEntity.getBotState());
+    }
 }
