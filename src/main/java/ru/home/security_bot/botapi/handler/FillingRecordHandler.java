@@ -118,6 +118,11 @@ public class FillingRecordHandler implements InputMessageHandler {
                     recordData.setCarNumber(userAnswer);
                     botState = BotState.SHOW_MAIN_MENU;
                     //userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+                    RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
+                    recordDataEntity.setRecordDate(new Date(System.currentTimeMillis()));
+                    recordDataEntity.setUserId(userId);
+                    recordDataEntity.setChatId(chatId);
+                    recordDataRepository.save(recordDataEntity);
                     sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
                             "Данные по вашей заявке", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
                 } else {
@@ -127,11 +132,6 @@ public class FillingRecordHandler implements InputMessageHandler {
                 break;
         }
         BotStateUtil.saveBotState(userId, chatId, botState);
-        RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
-        recordDataEntity.setRecordDate(new Date(System.currentTimeMillis()));
-        recordDataEntity.setUserId(userId);
-        recordDataEntity.setChatId(chatId);
-        recordDataRepository.save(recordDataEntity);
         userDataCache.saveRecordData(userId, recordData);
 
         return sendMessage;

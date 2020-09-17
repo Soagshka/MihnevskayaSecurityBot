@@ -79,10 +79,11 @@ public class TelegramFacade {
             userDataCache.saveRecordData(userId, recordData);
             //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
             BotStateUtil.saveBotState(userId, chatId, BotState.RECORD_DATA_FILLED);
-            return new SendMessage(chatId, "Номер автомобиля :");
+            return new SendMessage(chatId, "Номер автомобиля большими буквами без пробелов :");
         }
 
-        userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        //userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        BotStateUtil.saveBotState(userId, chatId, BotState.SHOW_MAIN_MENU);
         return callBackAnswer;
 
     }
