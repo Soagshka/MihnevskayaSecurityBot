@@ -78,6 +78,12 @@ public class TelegramFacade {
 
         if (buttonQuery.getData().equals("UnknownMark")) {
             RecordData recordData = userDataCache.getRecordData(userId);
+            BotState botState = BotStateUtil.getBotState(userId, chatId);
+            if (BotStateUtil.isRestartNeeded(recordData, botState)) {
+                botState = BotState.ASK_FLAT;
+                BotStateUtil.saveBotState(userId, chatId, botState);
+                return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново... ");
+            }
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
             //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
