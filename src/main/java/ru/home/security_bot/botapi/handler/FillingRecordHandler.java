@@ -139,6 +139,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 break;
         }
         BotStateUtil.saveBotState(userId, chatId, botState);
+        log.warn("recordData.getFlatNumber()  outside switch case === " + recordData.getFlatNumber());
         userDataCache.saveRecordData(userId, recordData);
 
         return sendMessage;
