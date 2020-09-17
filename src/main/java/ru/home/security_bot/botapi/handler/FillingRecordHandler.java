@@ -121,7 +121,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
                             "Данные по вашей заявке", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
                 } else {
-                    sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново : ");
+                    sendMessage = new SendMessage(chatId, "Неверный номер автомобиля! Введите заново  : ");
                 }
 
                 break;
