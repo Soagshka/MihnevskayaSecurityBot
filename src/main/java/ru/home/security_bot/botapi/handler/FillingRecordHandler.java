@@ -114,7 +114,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 break;
             case RECORD_DATA_FILLED:
-                Pattern pattern = Pattern.compile("^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$", Pattern.CASE_INSENSITIVE);
+                Pattern pattern = Pattern.compile("(?i)^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$");
                 Matcher matcher = pattern.matcher(userAnswer);
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
