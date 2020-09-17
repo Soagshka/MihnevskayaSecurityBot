@@ -67,6 +67,9 @@ public class FillingRecordHandler implements InputMessageHandler {
         long chatId = message.getChatId();
 
         RecordData recordData = userDataCache.getRecordData(userId);
+        if (recordData.getFlatNumber() == 0) {
+            botState = BotState.ASK_FLAT;
+        }
 
         SendMessage sendMessage = null;
 
