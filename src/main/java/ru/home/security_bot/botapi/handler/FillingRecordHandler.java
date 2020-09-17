@@ -85,6 +85,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 try {
                     sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
                     int flatNumber = Integer.parseInt(userAnswer);
+                    log.warn("INSIDE ASK+PHONE_NUMBER = " + flatNumber);
                     if (flatNumber > 0 && flatNumber < 2570) {
                         recordData.setFlatNumber(flatNumber);
                         botState = BotState.ASK_CAR_MARK;
