@@ -18,6 +18,7 @@ import ru.home.security_bot.dao.repository.RecordDataRepository;
 import ru.home.security_bot.mapper.RecordDataMapper;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.ReplyMessageService;
+import ru.home.security_bot.util.BotStateUtil;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class FillingRecordHandler implements InputMessageHandler {
 
                 break;
         }
-        saveBotState(userId, chatId, botState);
+        BotStateUtil.saveBotState(userId, chatId, botState);
         RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
         recordDataEntity.setRecordDate(new Date(System.currentTimeMillis()));
         recordDataEntity.setUserId(userId);
@@ -152,15 +153,5 @@ public class FillingRecordHandler implements InputMessageHandler {
         inlineKeyboardMarkup.setKeyboard(rowList);
 
         return inlineKeyboardMarkup;
-    }
-
-    private void saveBotState(int userId, Long chatId, BotState botState) {
-        BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(userId, chatId);
-        if (botStateEntity != null) {
-            botStateEntity.setBotState(botState.getDescription());
-            botStateRepository.save(botStateEntity);
-        } else {
-            botStateRepository.save(new BotStateEntity(userId, chatId, botState.getDescription()));
-        }
     }
 }

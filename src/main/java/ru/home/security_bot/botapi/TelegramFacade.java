@@ -7,16 +7,18 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_bot.cache.UserDataCache;
+import ru.home.security_bot.dao.repository.BotStateRepository;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.MainMenuService;
+import ru.home.security_bot.util.BotStateUtil;
 
 @Component
 public class TelegramFacade {
-    private BotStateContext botStateContext;
-    private UserDataCache userDataCache;
-    private MainMenuService mainMenuService;
+    private final BotStateContext botStateContext;
+    private final UserDataCache userDataCache;
+    private final MainMenuService mainMenuService;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService, BotStateRepository botStateRepository) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
@@ -59,7 +61,8 @@ public class TelegramFacade {
                 break;
         }
 
-        userDataCache.setUsersCurrentBotState(userId, botState);
+        BotStateUtil.saveBotState(userId, message.getChatId(), botState);
+        //userDataCache.setUsersCurrentBotState(userId, botState);
 
         replyMessage = botStateContext.processInputMessage(botState, message);
         return replyMessage;
@@ -74,7 +77,8 @@ public class TelegramFacade {
             RecordData recordData = userDataCache.getRecordData(userId);
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
+            //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
+            BotStateUtil.saveBotState(userId, chatId, BotState.RECORD_DATA_FILLED);
             return new SendMessage(chatId, "Номер автомобиля :");
         }
 
