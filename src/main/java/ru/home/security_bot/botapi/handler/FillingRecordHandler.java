@@ -49,7 +49,6 @@ public class FillingRecordHandler implements InputMessageHandler {
         BotStateEntity botStateEntity = botStateRepository.findByUserIdAndChatId(message.getFrom().getId(), message.getChatId());
         if (botStateEntity != null) {
             if (!botStateEntity.getBotState().equals("FILL_RECORD")) {
-                log.warn("INSIDE BOTSTATEENTITY NOT NULL NOT EQUAL");
                 botState = BotState.valueOf(botStateEntity.getBotState());
             }
         }
@@ -115,7 +114,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 break;
             case RECORD_DATA_FILLED:
-                Pattern pattern = Pattern.compile("^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$");
+                Pattern pattern = Pattern.compile("^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$", Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(userAnswer);
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
