@@ -77,6 +77,7 @@ public class FillingRecordHandler implements InputMessageHandler {
             case ASK_FLAT:
                 sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askFlat");
                 botState = BotState.ASK_PHONE_NUMBER;
+                log.warn("CHANGED STATE");
 //                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHONE_NUMBER);
                 break;
             case ASK_PHONE_NUMBER:
