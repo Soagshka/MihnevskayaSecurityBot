@@ -88,7 +88,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 try {
                     sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askPhoneNumber");
                     int flatNumber = Integer.parseInt(userAnswer);
-                    if (flatNumber > 0 && flatNumber < 2570) {
+                    if (flatNumber > 0 && flatNumber <= 2570) {
                         recordData.setFlatNumber(flatNumber);
                         botState = BotState.ASK_CAR_MARK;
 //                        userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_MARK);
@@ -122,7 +122,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 break;
             case RECORD_DATA_FILLED:
-                Pattern pattern = Pattern.compile("^[А-Я][0-9]{3}[А-Я]{2}[0-9]{2,3}$");
+                Pattern pattern = Pattern.compile("^[А,В,Е,К,М,Н,О,Р,С,Т,У,Х][0-9]{3}[А,В,Е,К,М,Н,О,Р,С,Т,У,Х]{2}[0-9]{2,3}$");
                 Matcher matcher = pattern.matcher(userAnswer.toUpperCase());
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
