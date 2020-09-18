@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_bot.cache.UserDataCache;
-import ru.home.security_bot.dao.repository.BotStateRepository;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.MainMenuService;
 import ru.home.security_bot.util.BotStateUtil;
@@ -20,7 +19,7 @@ public class TelegramFacade {
     private final UserDataCache userDataCache;
     private final MainMenuService mainMenuService;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService, BotStateRepository botStateRepository) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;

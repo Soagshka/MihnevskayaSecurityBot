@@ -32,7 +32,7 @@ public class SecurityTelegramBot extends TelegramWebhookBot {
 
     @Override
     public String getBotPath() {
-        return null;
+        return webHookPath;
     }
 
     public void setBotToken(String botToken) {

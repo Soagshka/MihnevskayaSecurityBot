@@ -19,6 +19,7 @@ import ru.home.security_bot.dao.repository.RecordDataRepository;
 import ru.home.security_bot.mapper.RecordDataMapper;
 import ru.home.security_bot.model.RecordData;
 import ru.home.security_bot.service.ReplyMessageService;
+import ru.home.security_bot.service.SecurityAdminBotClient;
 import ru.home.security_bot.util.BotStateUtil;
 
 import java.sql.Date;
@@ -34,13 +35,15 @@ public class FillingRecordHandler implements InputMessageHandler {
     private final ReplyMessageService replyMessageService;
     private final RecordDataRepository recordDataRepository;
     private final BotStateRepository botStateRepository;
+    private final SecurityAdminBotClient securityAdminBotClient;
     private static final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
-    public FillingRecordHandler(UserDataCache userDataCache, ReplyMessageService replyMessageService, RecordDataRepository recordDataRepository, BotStateRepository botStateRepository) {
+    public FillingRecordHandler(UserDataCache userDataCache, ReplyMessageService replyMessageService, RecordDataRepository recordDataRepository, BotStateRepository botStateRepository, SecurityAdminBotClient securityAdminBotClient) {
         this.userDataCache = userDataCache;
         this.replyMessageService = replyMessageService;
         this.recordDataRepository = recordDataRepository;
         this.botStateRepository = botStateRepository;
+        this.securityAdminBotClient = securityAdminBotClient;
     }
 
     @Override
@@ -130,6 +133,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     recordDataEntity.setUserId(userId);
                     recordDataEntity.setChatId(chatId);
                     recordDataRepository.save(recordDataEntity);
+                    securityAdminBotClient.sendRecordToAdminBot(recordData);
                     sendMessage = new SendMessage(message.getChatId(), String.format("%s%n -------------------%nНомер квартиры: %s%nНомер телефона: %s%nМарка автомобиля: %s%nНомер автомобиля: %s%n",
                             "Данные по вашей заявке", recordData.getFlatNumber(), recordData.getPhoneNumber(), recordData.getCarMark(), recordData.getCarNumber()));
                 } else {
