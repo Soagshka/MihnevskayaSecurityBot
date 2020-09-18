@@ -70,9 +70,9 @@ public class FillingRecordHandler implements InputMessageHandler {
 
         SendMessage sendMessage = null;
         if (BotStateUtil.isRestartNeeded(recordData, botState)) {
-            botState = BotState.ASK_FLAT;
+            botState = BotState.ASK_PHONE_NUMBER;
             BotStateUtil.saveBotState(userId, chatId, botState);
-            return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново... ");
+            return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново... Введите номер квартиры : ");
         }
 
         switch (botState) {

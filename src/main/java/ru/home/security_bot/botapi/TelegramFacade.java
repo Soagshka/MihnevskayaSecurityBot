@@ -80,9 +80,9 @@ public class TelegramFacade {
             RecordData recordData = userDataCache.getRecordData(userId);
             BotState botState = BotStateUtil.getBotState(userId, chatId);
             if (BotStateUtil.isRestartNeeded(recordData, botState)) {
-                botState = BotState.ASK_FLAT;
+                botState = BotState.ASK_PHONE_NUMBER;
                 BotStateUtil.saveBotState(userId, chatId, botState);
-                return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново... ");
+                return new SendMessage(chatId, "К сожалению время сессии закончилось, пройдите процедуру заново...  Введите номер квартиры : ");
             }
             recordData.setCarMark("Неизвестная марка");
             userDataCache.saveRecordData(userId, recordData);
