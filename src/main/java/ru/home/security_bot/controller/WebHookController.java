@@ -1,9 +1,7 @@
 package ru.home.security_bot.controller;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.security_bot.botapi.SecurityTelegramBot;
@@ -21,8 +19,8 @@ public class WebHookController {
         return securityTelegramBot.onWebhookUpdateReceived(update);
     }
 
-//    @GetMapping(value = "/subscriptions", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public List<UserTicketsSubscriptions> index() {
-//        return null;
-//    }
+    @GetMapping(value = "/getsmth", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int getsmth() {
+        return 1;
+    }
 }
