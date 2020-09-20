@@ -10,6 +10,8 @@ import ru.home.security_bot.dao.RecordDataEntity;
 import ru.home.security_bot.dao.repository.RecordDataRepository;
 import ru.home.security_bot.util.BotStateUtil;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -36,11 +38,13 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
             StringJoiner joiner = new StringJoiner("\n\n");
             joiner.add("Последние 5 заявок : ");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
-                joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
-                        + recordDataEntity.getFlatNumber() + "\n Номер телефона: "
-                        + recordDataEntity.getPhoneNumber().replaceAll("\\+", "")
-                        + "\n Марка автомобиля: " + recordDataEntity.getCarMark() + "\n Номер автомобиля: "
-                        + recordDataEntity.getCarNumber());
+                Timestamp moscowTime = new Timestamp(recordDataEntity.getRecordDate().getTime() + (1000 * 60 * 60 * 3));
+                joiner.add("Заявка номер " + recordsCount
+                        + " \n----------------------------------------\n Номер квартиры: " + recordDataEntity.getFlatNumber()
+                        + "\n Номер телефона: " + recordDataEntity.getPhoneNumber().replaceAll("\\+", "")
+                        + "\n Марка автомобиля: " + recordDataEntity.getCarMark()
+                        + "\n Номер автомобиля: " + recordDataEntity.getCarNumber()
+                        + "\n Время заявки: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(moscowTime));
                 recordsCount++;
             }
             sendMessage = new SendMessage(chatId, joiner.toString());
