@@ -33,7 +33,7 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
             sendMessage = new SendMessage(chatId, "Нет данных о Ваших записях...");
         } else {
             int recordsCount = 1;
-            StringJoiner joiner = new StringJoiner("\n");
+            StringJoiner joiner = new StringJoiner("\n\n");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
                 joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
                         + recordDataEntity.getFlatNumber() + "\n Номер телефона: "
