@@ -44,7 +44,7 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
                         + "\n Номер телефона: " + recordDataEntity.getPhoneNumber().replaceAll("\\+", "")
                         + "\n Марка автомобиля: " + recordDataEntity.getCarMark()
                         + "\n Номер автомобиля: " + recordDataEntity.getCarNumber()
-                        + "\n Время заявки: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(moscowTime));
+                        + "\n Время заявки: " + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(moscowTime));
                 recordsCount++;
             }
             sendMessage = new SendMessage(chatId, joiner.toString());
