@@ -57,7 +57,7 @@ public class TelegramFacade {
             case "Помощь":
                 botState = BotState.SHOW_HELP;
                 break;
-            case "Последние 5 записей":
+            case "Последние 5 заявок":
                 botState = BotState.SHOW_5_LAST_RECORDS;
                 break;
             default:
