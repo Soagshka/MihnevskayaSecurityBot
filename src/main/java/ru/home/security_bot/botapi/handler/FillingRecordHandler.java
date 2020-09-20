@@ -106,8 +106,8 @@ public class FillingRecordHandler implements InputMessageHandler {
                         sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarMark");
                         sendMessage.setReplyMarkup(getUnknownMark());
                         String phoneNumber = userAnswer.replaceAll("[\\D]", "");
-                        if (phoneNumber.startsWith("8") || phoneNumber.startsWith("7")) {
-                            phoneNumber = phoneNumber.substring(1);
+                        if (phoneNumber.startsWith("7")) {
+                            phoneNumber = phoneNumber.replaceFirst("7", "8");
                         }
                         recordData.setPhoneNumber(phoneNumber);
                         botState = BotState.ASK_CAR_NUMBER;
