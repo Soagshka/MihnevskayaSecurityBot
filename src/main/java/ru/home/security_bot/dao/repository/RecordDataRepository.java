@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.home.security_bot.dao.RecordDataEntity;
 
+import java.util.List;
+
 @Repository
 public interface RecordDataRepository extends JpaRepository<RecordDataEntity, Long> {
+    List<RecordDataEntity> findTop5ByUserIdOrderByRecordDateDesc(int userId);
 }

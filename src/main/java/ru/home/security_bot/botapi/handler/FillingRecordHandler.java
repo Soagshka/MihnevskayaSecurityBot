@@ -22,7 +22,7 @@ import ru.home.security_bot.service.ReplyMessageService;
 import ru.home.security_bot.service.SecurityAdminBotClient;
 import ru.home.security_bot.util.BotStateUtil;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -122,14 +122,14 @@ public class FillingRecordHandler implements InputMessageHandler {
                 //userDataCache.setUsersCurrentBotState(userId, BotState.RECORD_DATA_FILLED);
                 break;
             case RECORD_DATA_FILLED:
-                Pattern pattern = Pattern.compile("^[А,В,Е,К,М,Н,О,Р,С,Т,У,Х][0-9]{3}[А,В,Е,К,М,Н,О,Р,С,Т,У,Х]{2}[0-9]{2,3}$");
+                Pattern pattern = Pattern.compile("^[АВЕКМНОРСТУХ][0-9]{3}[АВЕКМНОРСТУХ]{2}[0-9]{2,3}$");
                 Matcher matcher = pattern.matcher(userAnswer.toUpperCase());
                 if (matcher.matches()) {
                     recordData.setCarNumber(userAnswer);
                     botState = BotState.SHOW_MAIN_MENU;
                     //userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
                     RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
-                    recordDataEntity.setRecordDate(new Date(System.currentTimeMillis()));
+                    recordDataEntity.setRecordDate(new Timestamp(System.currentTimeMillis()));
                     recordDataEntity.setUserId(userId);
                     recordDataEntity.setChatId(chatId);
                     recordDataRepository.save(recordDataEntity);

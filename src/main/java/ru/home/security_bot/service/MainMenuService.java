@@ -27,10 +27,13 @@ public class MainMenuService {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
         row1.add(new KeyboardButton("Заполнить данные для пропуска"));
+        row2.add(new KeyboardButton("Последние 5 записей"));
         row3.add(new KeyboardButton("Помощь"));
         keyboard.add(row1);
+        keyboard.add(row2);
         keyboard.add(row3);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

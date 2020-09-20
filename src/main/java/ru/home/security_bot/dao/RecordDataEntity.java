@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "record_data", schema = "security_bot", catalog = "securuty_bot_mh")
@@ -23,5 +23,5 @@ public class RecordDataEntity {
     private String phoneNumber;
     private String carMark;
     private String carNumber;
-    private Date recordDate;
+    private Timestamp recordDate;
 }

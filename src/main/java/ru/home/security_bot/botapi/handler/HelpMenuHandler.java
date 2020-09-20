@@ -10,8 +10,8 @@ import ru.home.security_bot.service.ReplyMessageService;
 
 @Component
 public class HelpMenuHandler implements InputMessageHandler {
-    private MainMenuService mainMenuService;
-    private ReplyMessageService messagesService;
+    private final MainMenuService mainMenuService;
+    private final ReplyMessageService messagesService;
 
     public HelpMenuHandler(MainMenuService mainMenuService, ReplyMessageService messagesService) {
         this.mainMenuService = mainMenuService;

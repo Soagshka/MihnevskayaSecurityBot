@@ -8,6 +8,7 @@ public enum BotState {
     ASK_CAR_MARK("ASK_CAR_MARK"),
     ASK_CAR_NUMBER("ASK_CAR_NUMBER"),
     RECORD_DATA_FILLED("RECORD_DATA_FILLED"),
+    SHOW_5_LAST_RECORDS("SHOW_5_LAST_RECORDS"),
     SHOW_HELP("SHOW_HELP");
 
     private final String description;
