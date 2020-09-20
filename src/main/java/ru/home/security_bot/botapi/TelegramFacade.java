@@ -61,7 +61,7 @@ public class TelegramFacade {
                 botState = BotState.SHOW_5_LAST_RECORDS;
                 break;
             default:
-                botState = BotStateUtil.getBotState(message.getFrom().getId(), message.getChatId());
+                botState = BotStateUtil.getBotState(userId, message.getChatId());
                 break;
         }
 
