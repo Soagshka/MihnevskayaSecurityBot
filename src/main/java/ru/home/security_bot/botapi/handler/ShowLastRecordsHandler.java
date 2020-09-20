@@ -34,6 +34,7 @@ public class ShowLastRecordsHandler implements InputMessageHandler {
         } else {
             int recordsCount = 1;
             StringJoiner joiner = new StringJoiner("\n\n");
+            joiner.add("Последние 5 заявок : ");
             for (RecordDataEntity recordDataEntity : recordDataEntityList) {
                 joiner.add("Заявка номер " + recordsCount + " \n----------------------------------------\n Номер квартиры: "
                         + recordDataEntity.getFlatNumber() + "\n Номер телефона: "
