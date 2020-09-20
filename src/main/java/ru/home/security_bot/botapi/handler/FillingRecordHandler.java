@@ -105,7 +105,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                     if (phoneUtil.isValidNumber(phoneNumberProto)) {
                         sendMessage = replyMessageService.getReplyMessage(chatId, "reply.askCarMark");
                         sendMessage.setReplyMarkup(getUnknownMark());
-                        recordData.setPhoneNumber(userAnswer);
+                        recordData.setPhoneNumber(userAnswer.replaceAll("[\\D]", ""));
                         botState = BotState.ASK_CAR_NUMBER;
                         //userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CAR_NUMBER);
                     } else {
@@ -125,7 +125,7 @@ public class FillingRecordHandler implements InputMessageHandler {
                 Pattern pattern = Pattern.compile("^[АВЕКМНОРСТУХ][0-9]{3}[АВЕКМНОРСТУХ]{2}[0-9]{2,3}$");
                 Matcher matcher = pattern.matcher(userAnswer.toUpperCase());
                 if (matcher.matches()) {
-                    recordData.setCarNumber(userAnswer);
+                    recordData.setCarNumber(userAnswer.toUpperCase());
                     botState = BotState.SHOW_MAIN_MENU;
                     //userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
                     RecordDataEntity recordDataEntity = RecordDataMapper.RECORD_DATA_MAPPER.recordDataToRecordEntity(recordData);
